@@ -1,7 +1,7 @@
 @echo off
 cd /d "%~dp0"
 
-set "VENV_PYTHON=%~dp0venv\Scripts\python.exe"
+set "PYTHON=%~dp0python3\python.exe"
 
 if not exist "%~dp0.env" (
     echo  Ilk kurulum gerekli
@@ -9,13 +9,13 @@ if not exist "%~dp0.env" (
     exit /b
 )
 
-if not exist "%VENV_PYTHON%" (
-    echo  venv bulunamadi, setup.bat calistiriliyor...
+if not exist "%PYTHON%" (
+    echo  Python bulunamadi, setup.bat calistiriliyor...
     call setup.bat
     exit /b
 )
 
-"%VENV_PYTHON%" "%~dp0app.py"
+"%PYTHON%" "%~dp0app.py"
 
 if errorlevel 1 (
     echo.

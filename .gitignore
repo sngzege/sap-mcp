@@ -1,7 +1,10 @@
+python3/
 venv/
 tools/
 __pycache__/
 *.pyc
+*.zip
+get-pip.py
 .env
 downloads/
 *.log

@@ -1,8 +1,8 @@
 # SAP Is Karti Indirici
 
-Excel C sutunu → SAP siparis ara → Is karti PDF toplu indir.
+Excel C sutunu -> SAP siparis ara -> Is karti PDF toplu indir.
 
-## Kurulum (Sirket PC, bos bilgisayar)
+## Windows Kurulumu (sirket PC, bos bilgisayar)
 
 ```cmd
 git clone https://github.com/sngzege/sap-mcp.git
@@ -10,38 +10,22 @@ cd sap-mcp
 setup.bat
 ```
 
-Setup adimlari:
-```
-[1/5] uv.exe indir           (tek exe, ~15 MB, GitHub'dan)
-[2/5] Python 3.11 yukle      (uv yonetir, bilgisayara dokunmaz)
-[3/5] venv olustur           (repo ici)
-[4/5] pip install gereklilikler  (fastmcp, openpyxl, dotenv)
-[5/5] Ayarlar penceresi acar (SAP bilgileri gir)
-```
+Setup 5 adim:
+1. Embedded Python 3.10 indir (sadece repo icine, kurulum yok)
+2. ._pth yapilandir + site-packages aktif
+3. pip yukle
+4. fastmcp + openpyxl + dotenv kur
+5. Ayarlar penceresi ac (SAP bilgileri gir)
 
 Sonra: `run.bat`
 
-## Ayarlar (.env)
+## Windows 7/8/10/11, 32-bit/64-bit uyumlu
 
-Arayuzde 4 alan doldurulur — her birinin altinda nereden bakacaginiz yazar:
+## Ayarlar (.env)
 
 | Parametre | Nasil bulunur |
 |-----------|---------------|
-| SAP Host URL | Tarayicida SAP Web GUI'ye gir, adres cubugunu tamamen kopyala |
-| SAP Client | SAP login ekraninda gorunen 3 haneli numara |
+| SAP Host URL | Tarayicida SAP Web GUI'ye gir, adres cubugunu kopyala |
+| SAP Client | SAP login ekranindaki 3 haneli numara |
 | OData Servis | SAP IT'ye sor: "Uretim siparisleri OData service name?" |
-| SAPSSO2 Cookie | F12 → Application → Solda Cookies → SAPSSO2 → Value |
-
-## Dosyalar
-
-```
-sap-mcp/
-├── setup.bat         ← BUNU CALISTIR (tek seferlik)
-├── run.bat           ← Uygulamayi baslat
-├── setup_gui.py      ← Ayarlar penceresi
-├── app.py            ← Ana GUI uygulamasi
-├── sap_server.py     ← SAP MCP Server
-├── requirements.txt  ← Python bagimliliklari
-├── .gitignore
-└── README.md
-```
+| SAPSSO2 Cookie | F12 -> Application -> Solda Cookies -> SAPSSO2 -> Value |
