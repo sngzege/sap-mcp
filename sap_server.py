@@ -47,18 +47,18 @@ class SAPConnection:
         host = env("SAP_HOST", "").rstrip("/")
         client = env("SAP_CLIENT", "100")
         service = env("SAP_ODATA_SERVICE", "ZPRODORD_SRV")
-        token = env("SAP_TOKEN", "")
+        sso2 = env("SAP_SSO2_COOKIE", "")
 
         if not host:
             return {"ok": False, "msg": "SAP_HOST .env dosyasinda tanimli degil"}
-        if not token or token == "your_bearer_token_here":
-            return {"ok": False, "msg": "SAP_TOKEN .env dosyasinda tanimli degil"}
+        if not sso2 or sso2 == "your_sapsso2_cookie_value_here":
+            return {"ok": False, "msg": "SAP_SSO2_COOKIE .env dosyasinda tanimli degil"}
 
         self.base_url = f"{host}/sap/opu/odata/sap/{service}"
         self.session = requests.Session()
         self.session.verify = False
+        self.session.cookies.set("SAPSSO2", sso2, domain="")
         self.session.headers.update({
-            "Authorization": f"Bearer {token}",
             "Accept": "application/json",
             "Content-Type": "application/json",
             "sap-client": client,
@@ -70,7 +70,7 @@ class SAPConnection:
             if r.status_code == 200:
                 return {"ok": True, "msg": f"SAP baglandi ({service})"}
             elif r.status_code == 401:
-                return {"ok": False, "msg": "Token gecersiz veya suresi dolmus (HTTP 401)"}
+                return {"ok": False, "msg": "SAPSSO2 cookie gecersiz veya suresi dolmus (HTTP 401). Yeni cookie alin."}
             elif r.status_code == 403:
                 return {"ok": False, "msg": "Yetkiniz yok (HTTP 403)"}
             else:
