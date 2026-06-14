@@ -2,6 +2,7 @@
 cd /d "%~dp0"
 
 set "PYTHON=%~dp0python3\python.exe"
+set "PATH=%~dp0python3;%~dp0python3\DLLs;%~dp0python3\Scripts;%PATH%"
 
 if not exist "%~dp0.env" (
     echo  Ilk kurulum gerekli
