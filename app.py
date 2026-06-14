@@ -21,7 +21,7 @@ from datetime import datetime
 from tkinter import (
     Tk, Frame, Label, Button, Entry, StringVar, Text,
     filedialog, messagebox, Scrollbar, END, NORMAL, DISABLED,
-    VERTICAL, BOTH, LEFT, RIGHT, X, W, E,
+    VERTICAL, BOTH, LEFT, RIGHT, X, Y, W, E,
 )
 from tkinter import ttk
 
