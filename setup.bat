@@ -64,16 +64,35 @@ REM -----------------------------------------------------------
 REM  Step 2: Install Python via uv
 REM -----------------------------------------------------------
 echo.
-echo  [2/5] Python 3.11 yukleniyor...
+echo  [2/5] Python yukleniyor...
 
-"%UV_EXE%" python install 3.11 2>&1
+"%UV_EXE%" python install 3.12 2>&1
 if errorlevel 1 (
-    echo  HATA: Python 3.11 yuklenemedi
-    echo  Yukaridaki hata ciktisini okuyun
+    REM Fallback: 3.11
+    echo  3.12 basarisiz, 3.11 deneniyor...
+    "%UV_EXE%" python install 3.11 2>&1
+    if errorlevel 1 (
+        REM Fallback: 3.10
+        echo  3.11 basarisiz, 3.10 deneniyor...
+        "%UV_EXE%" python install 3.10 2>&1
+    )
+)
+
+REM Determine installed Python version
+for /f "usebackq tokens=*" %%a in (`"%UV_EXE%" python find 3.12 2^>nul`) do set "PYTHON_EXE=%%a"
+if "%PYTHON_EXE%"=="" (
+    for /f "usebackq tokens=*" %%a in (`"%UV_EXE%" python find 3.11 2^>nul`) do set "PYTHON_EXE=%%a"
+)
+if "%PYTHON_EXE%"=="" (
+    for /f "usebackq tokens=*" %%a in (`"%UV_EXE%" python find 3.10 2^>nul`) do set "PYTHON_EXE=%%a"
+)
+if "%PYTHON_EXE%"=="" (
+    echo  HATA: Python yuklenemedi
     pause
     exit /b 1
 )
-echo  Python 3.11 yuklendi
+echo  Python: %PYTHON_EXE%
+"%PYTHON_EXE%" --version 2>nul
 
 REM -----------------------------------------------------------
 REM  Step 3: Create venv
@@ -85,7 +104,7 @@ set "VENV_DIR=%~dp0venv"
 set "VENV_PYTHON=%VENV_DIR%\Scripts\python.exe"
 
 if not exist "%VENV_PYTHON%" (
-    "%UV_EXE%" venv "%VENV_DIR%" --python 3.11 2>&1
+    "%PYTHON_EXE%" -m venv "%VENV_DIR%" 2>&1
     if errorlevel 1 (
         echo  HATA: venv olusturulamadi
         pause
