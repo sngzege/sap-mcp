@@ -45,8 +45,19 @@ if not exist venv (
 REM ── Adim 4: Bagimliliklari yukle ──
 echo  [4/4] Bagimliliklar yukleniyor...
 call venv\Scripts\activate.bat
-pip install --upgrade pip -q
-pip install -r requirements.txt -q
+pip install --upgrade pip -q 2>&1
+if %errorlevel% neq 0 (
+    echo  HATA: pip yuklenemedi!
+    pause
+    exit /b 1
+)
+pip install -r requirements.txt -q 2>&1
+if %errorlevel% neq 0 (
+    echo  HATA: Bagimliliklar yuklenemedi!
+    echo  pip ciktisini yukarida kontrol edin.
+    pause
+    exit /b 1
+)
 
 echo.
 echo  ════════════════════════════════════════════════
@@ -72,3 +83,10 @@ REM ── Baslat ──
 echo  Uygulama baslatiliyor...
 echo.
 python app.py
+if %errorlevel% neq 0 (
+    echo.
+    echo  HATA: Uygulama calisamadi (kod: %errorlevel%)
+    echo  Hata ayrintilari yukarida.
+    echo.
+)
+pause
