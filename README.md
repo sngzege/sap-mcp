@@ -1,8 +1,8 @@
 # SAP Is Karti Indirici
 
-Excel C sutunundaki siparis numaralarini SAP'de aratir, is karti PDF'lerini toplu indirir.
+Excel C sutunu → SAP siparis ara → Is karti PDF toplu indir.
 
-## Windows Kurulumu
+## Kurulum (Sirket PC, bos bilgisayar)
 
 ```cmd
 git clone https://github.com/sngzege/sap-mcp.git
@@ -10,33 +10,38 @@ cd sap-mcp
 setup.bat
 ```
 
-Setup otomatik yapar:
-1. `uv` indirir (tek dosya, Python yoneticisi, ~15MB)
-2. Python 3.11 kurar (sadece bu proje, bilgisayara kurulmaz)
-3. venv olusturur
-4. Bagimliliklari yukler
-5. Ayarlar arayuzunu acar (SAP bilgileri girilir)
+Setup adimlari:
+```
+[1/5] uv.exe indir           (tek exe, ~15 MB, GitHub'dan)
+[2/5] Python 3.11 yukle      (uv yonetir, bilgisayara dokunmaz)
+[3/5] venv olustur           (repo ici)
+[4/5] pip install gereklilikler  (fastmcp, openpyxl, dotenv)
+[5/5] Ayarlar penceresi acar (SAP bilgileri gir)
+```
 
-Sonrasinda: `run.bat`
+Sonra: `run.bat`
 
-## Ayarlar
+## Ayarlar (.env)
 
-| Parametre | Nereden bakilir |
-|-----------|-----------------|
-| SAP Host URL | Tarayicida SAP'ye gir, adres cubugunu kopyala |
-| SAP Client | SAP login ekraninda client numarasi |
-| OData Servis | SAP IT'ye sor |
-| SAPSSO2 Cookie | F12 → Application → Cookies → SAPSSO2 |
+Arayuzde 4 alan doldurulur — her birinin altinda nereden bakacaginiz yazar:
+
+| Parametre | Nasil bulunur |
+|-----------|---------------|
+| SAP Host URL | Tarayicida SAP Web GUI'ye gir, adres cubugunu tamamen kopyala |
+| SAP Client | SAP login ekraninda gorunen 3 haneli numara |
+| OData Servis | SAP IT'ye sor: "Uretim siparisleri OData service name?" |
+| SAPSSO2 Cookie | F12 → Application → Solda Cookies → SAPSSO2 → Value |
 
 ## Dosyalar
 
 ```
 sap-mcp/
-├── setup.bat         ← Kurulum (tek tikla)
-├── run.bat           ← Uygulama baslat
-├── setup_gui.py      ← Ayarlar arayuzu
-├── app.py            ← Ana uygulama
+├── setup.bat         ← BUNU CALISTIR (tek seferlik)
+├── run.bat           ← Uygulamayi baslat
+├── setup_gui.py      ← Ayarlar penceresi
+├── app.py            ← Ana GUI uygulamasi
 ├── sap_server.py     ← SAP MCP Server
-├── requirements.txt
+├── requirements.txt  ← Python bagimliliklari
+├── .gitignore
 └── README.md
 ```
