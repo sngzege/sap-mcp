@@ -11,6 +11,18 @@ echo  =======================================
 echo.
 
 REM -----------------------------------------------------------
+REM  Detect architecture (32-bit / 64-bit)
+REM -----------------------------------------------------------
+if "%PROCESSOR_ARCHITECTURE%"=="AMD64" (
+    set "ARCH=x86_64"
+) else if "%PROCESSOR_ARCHITEW6432%"=="AMD64" (
+    set "ARCH=x86_64"
+) else (
+    set "ARCH=i686"
+)
+echo  Sistem: %PROCESSOR_ARCHITECTURE% (%ARCH%)
+
+REM -----------------------------------------------------------
 REM  Step 0: Internet check
 REM -----------------------------------------------------------
 echo  [!] Internet kontrol...
@@ -33,24 +45,25 @@ set "UV_EXE=%TOOLS_DIR%\uv.exe"
 
 if not exist "%TOOLS_DIR%" mkdir "%TOOLS_DIR%"
 
-if not exist "%UV_EXE%" (
-    echo  Indiriliyor: uv.exe (yaklasik 15 MB)
+set "UV_URL=https://github.com/astral-sh/uv/releases/latest/download/uv-%ARCH%-pc-windows-msvc.exe"
 
-    curl -L --progress-bar -o "%UV_EXE%" "https://github.com/astral-sh/uv/releases/latest/download/uv-x86_64-pc-windows-msvc.exe" 2>nul
+if not exist "%UV_EXE%" (
+    echo  Indiriliyor: %UV_URL%
+
+    curl -L --progress-bar -o "%UV_EXE%" "%UV_URL%" 2>nul
     if not exist "%UV_EXE%" (
         echo  curl basarisiz, PowerShell deneniyor...
-        powershell -Command "$p='%UV_EXE%'; $ProgressPreference='SilentlyContinue'; Invoke-WebRequest -Uri 'https://github.com/astral-sh/uv/releases/latest/download/uv-x86_64-pc-windows-msvc.exe' -OutFile $p" 2>nul
+        powershell -Command "$p='%UV_EXE%'; $ProgressPreference='SilentlyContinue'; Invoke-WebRequest -Uri '%UV_URL%' -OutFile $p" 2>nul
     )
 
     if not exist "%UV_EXE%" (
         echo.
         echo  HATA: uv.exe indirilemedi
         echo.
-        echo  Elle indirmek icin:
-        echo    https://github.com/astral-sh/uv/releases/latest
-        echo    Dosya: uv-x86_64-pc-windows-msvc.exe
-        echo    Kaydet: %TOOLS_DIR%\uv.exe
-        echo    Sonra setup.bat i tekrar calistir
+        echo  Elle indir:
+        echo    %UV_URL%
+        echo  Kaydet: %TOOLS_DIR%\uv.exe
+        echo  Sonra setup.bat tekrar calistir
         echo.
         pause
         exit /b 1
@@ -68,17 +81,15 @@ echo  [2/5] Python yukleniyor...
 
 "%UV_EXE%" python install 3.12 2>&1
 if errorlevel 1 (
-    REM Fallback: 3.11
     echo  3.12 basarisiz, 3.11 deneniyor...
     "%UV_EXE%" python install 3.11 2>&1
     if errorlevel 1 (
-        REM Fallback: 3.10
         echo  3.11 basarisiz, 3.10 deneniyor...
         "%UV_EXE%" python install 3.10 2>&1
     )
 )
 
-REM Determine installed Python version
+REM Determine installed Python
 for /f "usebackq tokens=*" %%a in (`"%UV_EXE%" python find 3.12 2^>nul`) do set "PYTHON_EXE=%%a"
 if "%PYTHON_EXE%"=="" (
     for /f "usebackq tokens=*" %%a in (`"%UV_EXE%" python find 3.11 2^>nul`) do set "PYTHON_EXE=%%a"
@@ -92,6 +103,7 @@ if "%PYTHON_EXE%"=="" (
     exit /b 1
 )
 echo  Python: %PYTHON_EXE%
+echo  "%PYTHON_EXE%" --version 2>nul
 "%PYTHON_EXE%" --version 2>nul
 
 REM -----------------------------------------------------------
@@ -174,7 +186,7 @@ if errorlevel 1 (
             echo SAP_SSO2_COOKIE=your_sapsso2_cookie_value_here
         ) > "%~dp0.env"
     )
-    echo  .env dosyasi olusturuldu. Metin editor ile duzenleyin.
+    echo  .env olusturuldu. Metin editor ile duzenleyin.
 )
 
 echo.
